@@ -1,9 +1,9 @@
 package main
 
 import (
-	pagination "github.com/evrintobing17/go-postgres-pagination-example/"
+	pagination "github.com/evrintobing17/Pagination/"
 
-	"github.com/evrintobing17/go-postgres-pagination-example/offsetlimit"
+	"github.com/evrintobing17/Pagination/offsetlimit"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 )
