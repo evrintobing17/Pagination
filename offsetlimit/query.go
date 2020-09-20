@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	sq "github.com/Masterminds/squirrel"
-	pagination "github.com/evrintobing17/go-postgres-pagination-example"
+	pagination "github.com/evrintobing17/Pagination"
 )
 
 type FetchParam struct {

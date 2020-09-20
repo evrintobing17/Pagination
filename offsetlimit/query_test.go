@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	pagination "github.com/evrintobing17/go-postgres-pagination-example"
+	pagination "github.com/evrintobing17/Pagination"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

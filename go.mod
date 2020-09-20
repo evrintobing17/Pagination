@@ -1,4 +1,4 @@
-module github.com/bxcodec/go-postgres-pagination-example
+module github.com/evrintobing17/Pagination
 
 go 1.14
 
