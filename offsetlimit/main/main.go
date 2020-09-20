@@ -1,7 +1,7 @@
 package main
 
 import (
-	pagination "github.com/evrintobing17/Pagination/"
+	pagination "github.com/evrintobing17/Pagination"
 
 	"github.com/evrintobing17/Pagination/offsetlimit"
 	"github.com/labstack/echo/v4"

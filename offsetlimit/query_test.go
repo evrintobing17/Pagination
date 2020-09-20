@@ -12,7 +12,7 @@ import (
 
 func BenchmarkFetchQuery(b *testing.B) {
 	// change this based on the database host
-	err := os.Setenv("POSTGRES_HOST", "localhost")
+	err := os.Setenv("POSTGRES_HOST", "127.0.0.1")
 	require.NoError(b, err)
 	err = os.Setenv("POSTGRES_PORT", "5432")
 	require.NoError(b, err)
