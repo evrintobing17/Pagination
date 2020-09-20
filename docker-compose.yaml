@@ -1,0 +1,176 @@
+# Reason why stick to V2 not V3
+# https://github.com/peter-evans/docker-compose-healthcheck/issues/3#issuecomment-329037485
+# This is only for local development. Production, we will use K8s or EBS. We won't use Docker Compose/ Swarm
+version: "2.3"
+networks:
+  backend:
+    driver: bridge
+
+services:
+  # =================
+  # Auto increment
+  # =================
+  auto-increment:
+    build:
+      context: .
+      dockerfile: ./autoincrementid/Dockerfile
+    container_name: payment-with-auto-increment-id
+    ports:
+      # open:internal
+      - 9091:9090
+    environment: 
+      POSTGRES_HOST: postgres-auto-increment
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: payment
+      DB_MAX_CONN_LIFE_TIME_S: 300
+      DB_MAX_OPEN_CONNECTION: 100
+      DB_MAX_IDLE_CONNECTION: 10
+    networks: 
+      - backend
+    depends_on:
+      postgres-auto-increment:
+        condition: service_healthy
+  postgres-auto-increment:
+    build:
+      context: ./autoincrementid
+      dockerfile: db.Dockerfile
+    container_name: payment-with-auto-increment-id-db
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  # =================
+  # Offset Limit
+  # =================
+  offset-limit:
+    build:
+      context: .
+      dockerfile: ./offsetlimit/Dockerfile
+    container_name: payment-with-offset-limit
+    ports:
+      - 9092:9090
+    environment: 
+      POSTGRES_HOST: postgres-offset-limit
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: payment
+      DB_MAX_CONN_LIFE_TIME_S: 300
+      DB_MAX_OPEN_CONNECTION: 100
+      DB_MAX_IDLE_CONNECTION: 10
+    networks: 
+      - backend
+    depends_on:
+      postgres-offset-limit:
+        condition: service_healthy
+
+  postgres-offset-limit:
+    build:
+      context: ./offsetlimit
+      dockerfile: db.Dockerfile
+    container_name: payment-with-offset-limit-db
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =================
+  # UUID Created Time
+  # =================
+  uuid-created-time:
+    build:
+      context: .
+      dockerfile: ./uuidcreatedtime/Dockerfile
+    container_name: payment-with-uuid-created-time
+    ports:
+      - 9093:9090
+    environment: 
+      POSTGRES_HOST: postgres-uuid-created-time
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: payment_with_uuid
+      DB_MAX_CONN_LIFE_TIME_S: 300
+      DB_MAX_OPEN_CONNECTION: 100
+      DB_MAX_IDLE_CONNECTION: 10
+    networks: 
+      - backend
+    depends_on:
+      postgres-uuid-created-time:
+        condition: service_healthy
+
+  postgres-uuid-created-time:
+    build:
+      context: ./uuidcreatedtime
+      dockerfile: db.Dockerfile
+    container_name: payment-with-uuid-created-time-db
+    environment:
+      POSTGRES_DB: payment_with_uuid
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment_with_uuid"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  # =================
+  # Page Number
+  # =================
+  page-number:
+    build:
+      context: .
+      dockerfile: ./pagenumber/Dockerfile
+    container_name: payment-with-page-number
+    ports:
+      - 9094:9090
+    environment: 
+      POSTGRES_HOST: postgres-page-number
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: payment
+      DB_MAX_CONN_LIFE_TIME_S: 300
+      DB_MAX_OPEN_CONNECTION: 100
+      DB_MAX_IDLE_CONNECTION: 10
+    networks: 
+      - backend
+    depends_on:
+      postgres-page-number:
+        condition: service_healthy
+
+  postgres-page-number:
+    build:
+      context: ./pagenumber
+      dockerfile: db.Dockerfile
+    container_name: payment-with-page-number-db
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
